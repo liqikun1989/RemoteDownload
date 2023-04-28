@@ -247,7 +247,6 @@ class MainActivity : BaseActivity<NullViewModel>() {
 
     private fun getStoragePath(mContext: Context, is_removale: Boolean): String? {
         val mStorageManager: StorageManager = mContext.getSystemService(Context.STORAGE_SERVICE) as StorageManager
-
         try {
             val storageVolumeClazz = Class.forName("android.os.storage.StorageVolume")
             val getVolumeList: Method = mStorageManager.javaClass.getDeclaredMethod("getVolumeList")
