@@ -198,15 +198,11 @@ class MainActivity : BaseActivity<NullViewModel>() {
 
     private fun buildRootData() {
         mFileList.clear()
-        val externalFilesDirs = getExternalFilesDirs(null)
-        val externalStorageDirectory = Environment.getExternalStorageDirectory()
-        getStoragePath(this, true)
-        getTFDir(this)
-        externalFilesDirs.forEachIndexed { index, it ->
+        getStoragePath(this).forEachIndexed { index, it ->
             val fileListItem = FileListItem(
                 R.mipmap.icon_folder,
-                getString(R.string.sd_card, index),
-                it.parentFile?.parentFile?.parentFile?.parentFile?.path ?: "",
+                if (index == 0) "车机内部存储" else "外置SD卡",
+                it,
                 isShowPath = true,
                 isDirectory = true
             )
@@ -245,21 +241,23 @@ class MainActivity : BaseActivity<NullViewModel>() {
         return R.mipmap.icon_unknown_file
     }
 
-    private fun getStoragePath(mContext: Context, is_removale: Boolean): String? {
+    private fun getStoragePath(mContext: Context) : MutableList<String> {
+        val result = mutableListOf<String>()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            result.add(Environment.getExternalStorageDirectory().path)
+            return result
+        }
         val mStorageManager: StorageManager = mContext.getSystemService(Context.STORAGE_SERVICE) as StorageManager
         try {
             val storageVolumeClazz = Class.forName("android.os.storage.StorageVolume")
-            val getVolumeList: Method = mStorageManager.javaClass.getDeclaredMethod("getVolumeList")
             val getPath: Method = storageVolumeClazz.getDeclaredMethod("getPath")
             val isRemovable: Method = storageVolumeClazz.getDeclaredMethod("isRemovable")
-            val storageVolumes = getVolumeList.invoke(mStorageManager) as Array<*>
-            for (element in storageVolumes) {
-                val storageVolumeElement: StorageVolume = element as StorageVolume
+            val storageVolumes = mStorageManager.storageVolumes
+            storageVolumes.forEachIndexed {index, storageVolume ->
+                val storageVolumeElement: StorageVolume = storageVolume as StorageVolume
                 val path = getPath.invoke(storageVolumeElement) as String
                 val removable = isRemovable.invoke(storageVolumeElement) as Boolean
-                if (is_removale == removable) {
-                    return path
-                }
+                result.add(index, path)
             }
         } catch (e: ClassNotFoundException) {
             e.printStackTrace()
@@ -270,48 +268,7 @@ class MainActivity : BaseActivity<NullViewModel>() {
         } catch (e: IllegalAccessException) {
             e.printStackTrace()
         }
-        return null
-    }
-
-    fun getTFDir(context: Context): String? {
-        var sdcardDir: String? = null
-        val storageManager = context.applicationContext.getSystemService(STORAGE_SERVICE) as StorageManager
-        var volumeInfoClazz: Class<*>? = null
-        var diskInfoClazz: Class<*>? = null
-        try {
-            diskInfoClazz = Class.forName("android.os.storage.DiskInfo")
-            val isSd = diskInfoClazz.getMethod("isSd")
-            volumeInfoClazz = Class.forName("android.os.storage.VolumeInfo")
-            val getType = volumeInfoClazz.getMethod("getType")
-            val getDisk = volumeInfoClazz.getMethod("getDisk")
-            val path: Field = volumeInfoClazz.getDeclaredField("path")
-            val getVolumes = storageManager.javaClass.getMethod("getVolumes")
-            val result = getVolumes.invoke(storageManager) as List<Class<*>>
-            for (i in result.indices) {
-                val volumeInfo: Any = result[i]
-                if (getType.invoke(volumeInfo) as Int == 0) {
-                    val disk = getDisk.invoke(volumeInfo)
-                    if (disk != null) {
-                        if (isSd.invoke(disk) as Boolean) {
-                            sdcardDir = path.get(volumeInfo) as String
-                            break
-                        }
-                    }
-                }
-            }
-            return if (sdcardDir == null) {
-                Log.w(TAG, "sdcardDir null")
-                null
-            } else {
-                Log.i(TAG, "sdcardDir " + sdcardDir + File.separator)
-                sdcardDir + File.separator
-            }
-        } catch (e: Exception) {
-            Log.i(TAG, "sdcardDir e " + e.message)
-            e.printStackTrace()
-        }
-        Log.w(TAG, "sdcardDir null")
-        return null
+        return result
     }
 
     class FileListViewHolder(val item: ItemFileListBinding) : RecyclerView.ViewHolder(item.root) {

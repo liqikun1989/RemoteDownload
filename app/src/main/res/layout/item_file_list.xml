@@ -15,18 +15,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_5"
-        android:minHeight="@dimen/dp_50"
-        android:paddingTop="@dimen/dp_5"
+        android:minHeight="@dimen/dp_40"
         android:paddingBottom="@dimen/dp_5">
 
         <ImageView
             android:id="@+id/tvFileListItemIcon"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_50"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
             android:layout_marginStart="@dimen/dp_10"
-            android:scaleType="centerInside"
             app:bindingSrc="@{FileListItem.icon}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@mipmap/icon_folder" />
@@ -38,10 +36,10 @@
             android:layout_marginStart="@dimen/dp_5"
             android:layout_marginEnd="@dimen/dp_10"
             android:ellipsize="end"
-            android:lines="2"
+            android:maxLines="2"
             android:text="@{FileListItem.name}"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             app:layout_constraintBottom_toTopOf="@id/tvFileListItemPath"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvFileListItemIcon"
@@ -55,7 +53,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="@{FileListItem.path}"
-            android:textSize="@dimen/sp_12"
+            android:textSize="@dimen/sp_10"
             android:visibility="@{FileListItem.showPath ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tvFileListItemName"
@@ -65,7 +63,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_0_5"
+            android:layout_height="@dimen/dp_0_1"
             android:layout_marginStart="@dimen/dp_60"
             android:layout_marginEnd="@dimen/dp_10"
             android:background="@color/color_FFDCDCDC"
