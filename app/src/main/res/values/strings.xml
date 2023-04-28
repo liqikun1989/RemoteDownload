@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">文件下载</string>
+    <string name="sd_card">存储卡%1$d</string>
+    <string name="connect_wifi">请连接wifi后尝试</string>
+</resources>
