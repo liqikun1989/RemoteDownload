@@ -25,13 +25,13 @@ android {
         debug {
             keyAlias 'key0'
             keyPassword '2005120210'
-            storeFile file('D:\\Program Files\\Android\\AndroidStudioProjects\\RemoteDownload\\KeyStore.jks')
+            storeFile file('../KeyStore.jks')
             storePassword '2005120210'
         }
         release {
             keyAlias 'key0'
             keyPassword '2005120210'
-            storeFile file('D:\\Program Files\\Android\\AndroidStudioProjects\\RemoteDownload\\KeyStore.jks')
+            storeFile file('../KeyStore.jks')
             storePassword '2005120210'
         }
     }
