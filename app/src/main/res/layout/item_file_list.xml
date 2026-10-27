@@ -23,7 +23,7 @@
             android:layout_width="@dimen/dp_35"
             android:layout_height="@dimen/dp_35"
             android:layout_marginStart="@dimen/dp_10"
-            app:bindingSrc="@{FileListItem.icon}"
+            android:src="@{FileListItem.icon}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
